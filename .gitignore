@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+.venv/
+data/
+.env
+*.sqlite3
+docs/generated/
+docs/settings-temp/

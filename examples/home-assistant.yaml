@@ -1,0 +1,63 @@
+# Example only: adapt entity IDs and MQTT base topic to your installation.
+# Put the binary sensor under the existing mqtt: section of configuration.yaml.
+mqtt:
+  binary_sensor:
+    - name: Heater all day
+      unique_id: example_heater_all_day
+      state_topic: home/heater/config/ganztags
+      payload_on: 'ON'
+      payload_off: 'OFF'
+
+# Add this top-level section to configuration.yaml, or copy only its list entries into automations.yaml.
+automation:
+  - id: example_heater_with_light
+    alias: Heater with room light
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: light.room
+        from: 'off'
+        to: 'on'
+        id: light_on
+      - trigger: state
+        entity_id: light.room
+        to: 'off'
+        id: light_off
+    actions:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: light_on
+              - condition: state
+                entity_id: switch.heater
+                state: 'off'
+              - condition: or
+                conditions:
+                  - condition: state
+                    entity_id: binary_sensor.heater_all_day
+                    state: 'on'
+                  - condition: and
+                    conditions:
+                      - condition: state
+                        entity_id: binary_sensor.heater_all_day
+                        state: 'off'
+                      - condition: time
+                        after: '21:00:00'
+                        before: '07:00:00'
+            sequence:
+              - action: mqtt.publish
+                data:
+                  topic: home/heater/cmnd/POWER
+                  payload: 'ON'
+                  qos: 0
+                  retain: false
+          - conditions:
+              - condition: trigger
+                id: light_off
+            sequence:
+              - action: mqtt.publish
+                data:
+                  topic: home/heater/cmnd/POWER
+                  payload: 'OFF'
+                  qos: 1
+                  retain: false

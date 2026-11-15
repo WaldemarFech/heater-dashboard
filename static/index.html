@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Heizstrahler · Ankleide</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/theme.css">
+  <script src="/static/theme.js" defer></script>
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+ <header class="masthead"><a href="/" aria-label="Heizstrahler Ankleide Startseite">Ankleide <span>/</span> Heizstrahler</a><span class="masthead-note">Lokale Auswertung</span></header>
+ <main>
+  <section class="hero" aria-labelledby="title">
+   <div class="hero-copy"><h1 id="title">Wärme, wenn sie gebraucht wird.</h1><p>Schalten und nachsehen, wann der Heizstrahler gelaufen ist.</p></div>
+   <div class="live-panel">
+    <div class="live-main"><span class="indicator" id="indicator" aria-hidden="true"></span><div><span class="small-label">Steckdose</span><strong id="device-state" aria-live="polite">Verbindung wird geprüft</strong><span id="state-age" class="muted">Noch keine Rückmeldung</span></div></div>
+    <div class="live-controls"><div class="watts"><strong id="power">–</strong><span>aktuelle Leistung</span></div><div class="buttons"><button id="off" class="button secondary">Ausschalten</button><button id="on" class="button primary" disabled>Einschalten</button></div></div>
+    <p class="notice" id="command-status" role="status">Die Steckdose meldet ihren Zustand selbst zurück.</p>
+   </div>
+  </section>
+  <section class="history" aria-labelledby="history-title">
+   <div class="section-head"><div><h2 id="history-title">Wann war es warm?</h2><p>Eine Übersicht aus dem lokalen Messdatenarchiv.</p><p id="history-start">Erfassungsbeginn wird geladen.</p></div><label class="select-label">Zeitraum <select id="range"><option value="1">Letzte 24 Stunden</option><option value="7">Letzte 7 Tage</option><option value="30">Letzte 30 Tage</option><option value="90">Letzte 90 Tage</option></select></label><label class="select-label">Bis einschließlich <input id="until" type="date" aria-describedby="date-help"><small id="date-help">Leer: bis jetzt</small></label></div>
+   <div class="timeline-wrap"><div class="timeline-head"><span>Verlauf</span><span id="history-range">–</span></div><svg id="timeline" role="img" aria-label="Zeitlicher Verlauf; Daten werden geladen" viewBox="0 0 1000 40" preserveAspectRatio="none"></svg><div class="legend"><span><i class="key-on"></i>Ein</span><span><i class="key-off"></i>Aus</span><span><i class="key-unknown"></i>Keine Daten</span></div></div>
+   <div class="metrics"><div><span>Erfasste Einschaltungen</span><strong id="starts">–</strong><small>aus verfügbaren Meldungen</small></div><div><span>Geschätzte Laufzeit</span><strong id="duration">–</strong><small>aus verfügbaren Meldungen</small></div><div><span>Verbrauch</span><strong id="energy">–</strong><small id="energy-detail">gemessener Zählerstand</small></div><div><span>Geschätzte Kosten</span><strong id="cost">–</strong><small id="cost-detail">Tarif in Einstellungen setzen</small></div></div>
+   <p class="notice">Der Verlauf ist aus den verfügbaren Meldungen rekonstruiert. Auch kürzere Unterbrechungen bei weniger als zehn Minuten Abstand zwischen Messpunkten können unbemerkt bleiben; dadurch kann die geschätzte Laufzeit zu lang oder zu kurz sein.</p>
+   <p class="notice history-notice" id="history-status" role="status">Messdaten werden geladen.</p>
+   <details class="run-details"><summary>Betriebszeiten und Datenlücken ansehen</summary><div id="interval-list" class="interval-list"><p>Verlauf wird geladen.</p></div></details>
+  </section>
+  <details class="settings"><summary><span><strong>Einstellungen</strong><small>Strompreis, Darstellung und Steuerung</small></span><span class="chevron" aria-hidden="true">+</span></summary><div class="settings-body"><form id="tariff-form"><label for="tariff">Strompreis</label><div class="price-field"><input id="tariff" name="tariff" type="number" min="0" max="10" step="0.001" inputmode="decimal" placeholder="z. B. 0,32" required><span>€ / kWh</span><button class="button primary" type="submit">Speichern</button></div><p>Der aktuelle Preis wird auf den gewählten Zeitraum angewendet. Historische Tarifwechsel sind in der Schätzung nicht enthalten.</p><p id="settings-status" role="status"></p></form><div class="setting-note"><label for="theme">Darstellung</label><div><select id="theme" name="theme"><option value="system">Systemeinstellung</option><option value="light">Hell</option><option value="dark">Dunkel</option></select></div><p>Diese Einstellung wird nur in diesem Browser gespeichert.</p><strong>Automatisches Ausschalten</strong><p>Die maximale Einschaltdauer wird am Gerät eingerichtet und unabhängig von dieser Seite überprüft. Diese Seite ändert die Geräte-Sicherheitsregel nicht.</p><strong>Lichtautomatik</strong><label class="mode-toggle" for="all-day"><input id="all-day" type="checkbox" disabled> Ganztägig mit Licht einschalten</label><p id="mode-status" role="status">Schaltmodus wird geladen.</p><p>Aus: nur zwischen 21 und 7 Uhr. Ein: zu jeder Uhrzeit. Das Einschalten erfolgt einmal beim Einschalten des Lichts; Licht aus schaltet die Steckdose aus.</p><p>Die Regel läuft in Home Assistant. <a href="https://my.home-assistant.io/redirect/automations/">Automation in Home Assistant öffnen</a></p><strong>Messdatenbank</strong><p id="database-status">Verbindung wird geprüft.</p><p>Zentrale Messdatenbank; Zugangsdaten bleiben auf dem Server. Der Strompreis oben gilt als rückwirkende Schätzung.</p></div></div></details>
+ </main>
+ <footer>Lokale Ansicht <span>·</span> Messdaten aus dem zentralen Archiv</footer>
+</body>
+</html>

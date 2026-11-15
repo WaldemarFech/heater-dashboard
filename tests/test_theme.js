@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const source=fs.readFileSync('static/theme.js','utf8');
+let change; const select={value:'',addEventListener:(event,fn)=>{assert.equal(event,'change');change=fn}};
+const store={value:'dark',getItem(){return this.value},setItem(key,value){assert.equal(key,'heizstrahler-theme');this.value=value}};
+const html={dataset:{}};
+vm.runInNewContext(source,{document:{documentElement:html,getElementById:id=>{assert.equal(id,'theme');return select}},localStorage:store,Set});
+assert.equal(html.dataset.theme,'dark');assert.equal(select.value,'dark');
+select.value='light';change();assert.equal(html.dataset.theme,'light');assert.equal(store.value,'light');
+select.value='system';change();assert.equal(html.dataset.theme,undefined);assert.equal(store.value,'system');
+console.log('Theme selection tests passed');
